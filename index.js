@@ -198,3 +198,25 @@ function addEmployee() {
     })
 })
 }
+function updateEmployeeRole() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: showemployees,
+            name: "employee"
+        },
+        {
+            type: "list",
+            message: "What role is the new designated role for this employee?",
+            choices: showroles,
+            name: "role_id"
+        }
+    ]).then(function(answer) {
+        connection.query(`UPDATE employee SET role_id = ${answer.role_id} WHERE id = ${answer.employee}`), (err, data) => {
+            if(err) throw err;
+            console.log("Role Changed to: " + answer.role_id);
+            initPrompt();
+        }
+    })
+}
