@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const chalk = require("chalk");
+//const cTable = require("console.table")
+//const chalk = require("chalk");
 const { printTable } = require("console-table-printer");
 const figlet = require("figlet");
 
@@ -57,6 +58,9 @@ function initPrompt() {
             case "View Departments":
                 viewDepartments();
                 break;
+            case "View Roles":
+                viewRoles();
+                break;
             case "Add Employee":
                 addEmployee();
                 break;
@@ -69,10 +73,10 @@ function initPrompt() {
             case "Update Employee Role":
                 updateEmployeeRole();
                 break;
-            case "View Roles":
-                viewRoles();
-                break;
-            case "End":
+            case "END":
+                figlet("GoodBye!", (err, result) => {
+                    console.log(err || result)
+                })
                 connection.end();
                 break;
         }
@@ -204,19 +208,20 @@ function updateEmployeeRole() {
             type: "list",
             message: "Which employee would you like to update?",
             choices: showemployees,
-            name: "employee"
+            name: 'employee'
         },
         {
             type: "list",
             message: "What role is the new designated role for this employee?",
             choices: showroles,
-            name: "role_id"
+            name: 'role_id'
         }
     ]).then(function(answer) {
-        connection.query(`UPDATE employee SET role_id = ${answer.role_id} WHERE id = ${answer.employee}`), (err, data) => {
-            if(err) throw err;
+        connection.query(`UPDATE employee SET ? WHERE ?`, [{role_id: answer.role_id}, {id: answer.employee}], (err, answer) => {
             console.log("Role Changed to: " + answer.role_id);
+            if(err) throw err;
+            //console.log("Role Changed to: " + answer.role_id);
             initPrompt();
-        }
+        })
     })
 }
