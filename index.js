@@ -110,7 +110,10 @@ function viewDepartments() {
     })
 }
 function viewRoles() {
-    var query = "SELECT * FROM role";
+    var query = `SELECT  role.id AS ID, role.title AS Role, role.salary AS Salary, department.name as Department_Name
+    FROM role
+    INNER JOIN department 
+    ON role.department_id = department.id`;
     figlet("Employee Roles", (err, result) => {
         console.log(err || result)
     })
